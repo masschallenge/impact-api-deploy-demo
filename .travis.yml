@@ -13,19 +13,22 @@ before_install:
 - chmod +x docker-compose
 - sudo mv docker-compose /usr/local/bin
 - docker-compose --version
-- sudo curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
-- sudo chmod +x /usr/local/bin/ecs-cli
-- ecs-cli configure --region us-east-1 --access-key AKIAITPM6MOZOGI22B5A --secret-key  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 --cluster test3
 before_script:
 - docker-compose build
 - docker-compose up -d 
 script:
 - docker-compose run --rm web python3 manage.py test 
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "development" ]; then
-    docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD https://$DOCKER_REGISTRY;
-    docker tag impactapideploydemo_web:latest $DOCKER_REGISTRY/impact_demo:latest;
-    docker push $DOCKER_REGISTRY/impact_demo:latest;
-    fi
-  - ecs-cli compose -f docker-compose.prod.yml down
-  - ecs-cli compose -f docker-compose.prod.yml up
+- if [ "$TRAVIS_BRANCH" == "development" ]; then
+  sudo curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest;
+  sudo chmod +x /usr/local/bin/ecs-cli;
+  pip install --user awscli;
+  export PATH=$PATH:$HOME/.local/bin;
+  eval $(aws ecr get-login --region us-east-1);
+  docker tag impactapideploydemo_web:latest $DOCKER_REGISTRY/impact_demo:latest;
+  docker push $DOCKER_REGISTRY/impact_demo:latest;
+  ecs-cli configure --region us-east-1 --access-key $AWS_ACCESS_KEY --secret-key  $AWS_SECRET_ACCESS_KEY --cluster test3;
+  ecs-cli compose -f docker-compose.prod.yml down;
+  ecs-cli compose -f docker-compose.prod.yml up;
+  fi
+
