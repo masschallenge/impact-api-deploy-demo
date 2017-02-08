@@ -1,0 +1,8 @@
+version: '2'
+services:
+  web:
+    image: 997386117669.dkr.ecr.us-east-1.amazonaws.com/impact_demo
+    ports:
+      - "80:8000"
+    env_file: docker-env
+    user: root
