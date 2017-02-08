@@ -21,8 +21,8 @@ script:
 after_success:
 - if [ "$TRAVIS_BRANCH" == "development" ]; then
   pip install --user awscli;
-  export PATH=$PATH:$HOME/.local/bin; # put aws in the path
-  eval $(aws ecr get-login --region us-east-1)
+  export PATH=$PATH:$HOME/.local/bin;
+  eval $(aws ecr get-login --region us-east-1);
   docker tag impactapideploydemo_web:latest $DOCKER_REGISTRY/impact_demo:latest;
   docker push $DOCKER_REGISTRY/impact_demo:latest;
   fi
