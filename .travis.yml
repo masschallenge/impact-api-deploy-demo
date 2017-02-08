@@ -21,6 +21,6 @@ script:
 after_success:
   - if [ "$TRAVIS_BRANCH" == "development" ]; then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD https://$DOCKER_REGISTRY;
-    docker tag impactapideploydemo_web:latest $DOCKER_REGISTRY/impact-demo:latest;
-    docker push $DOCKER_REGISTRY/impact-demo:latest;
+    docker tag impactapideploydemo_web:latest $DOCKER_REGISTRY/impact_demo:latest;
+    docker push $DOCKER_REGISTRY/impact_demo:latest;
     fi
