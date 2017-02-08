@@ -18,3 +18,9 @@ before_script:
 - docker-compose up -d 
 script:
 - docker-compose run --rm web python3 manage.py test 
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "development" ]; then
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" -e none "https://$DOCKER_REGISTRY";
+    docker tag impactapideploydemo_web_1:latest "$DOCKER_REGISTRY/impact-api:latest"
+    docker push "$DOCKER_REGISTRY/impact-api:latest";
+    fi
