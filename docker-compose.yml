@@ -1,0 +1,50 @@
+version: '2'
+services:
+  mysql:
+    image: mysql
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mc_dev
+  # Nginx
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./web/impact/media:/media:ro
+      - ./web/impact/static:/static:ro
+    links:
+      - web
+    environment:
+      VIRTUAL_HOST: impact.dev
+  # Web python
+  web:
+    build: ./web
+    ports:
+      - "80:8000"
+    volumes:
+      - ./web/impact:/wwwroot
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    env_file: docker-env
+    user: root
+  start_dependencies:
+      image: "python:3.6"
+      depends_on:
+        - web
+        - mysql
+      links:
+        - mysql
+        - web
+      command: >
+        /bin/bash -c "
+        until $$(curl --output /dev/null --silent --head --fail http://web:8000); do
+              echo \"BUILDING...\"
+              sleep 5
+          done; echo \"BUILD COMPLETE - visit http://localhost in a browser\";"

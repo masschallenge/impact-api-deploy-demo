@@ -1,0 +1,4 @@
+DJANGO_SECRET_KEY=d60a10fc-ffb7-4798-89c3-b28aa06d8659
+DJANGO_ALLOWED_HOSTS="*"
+DATABASE_URL=mysql://root:root@mysql/mc_dev
+EMAIL_URL=console://
