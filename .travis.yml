@@ -26,7 +26,7 @@ after_success:
 - eval $(aws ecr get-login --region us-east-1);
 - docker tag impactapideploydemo_web:latest $DOCKER_REGISTRY/impact_demo:latest;
 - docker push $DOCKER_REGISTRY/impact_demo:latest;
-- ecs-cli configure --region us-east-1 --access-key $AWS_ACCESS_KEY --secret-key $AWS_SECRET_ACCESS_KEY --cluster test3;
+- ecs-cli configure --region us-east-1 --access-key $AWS_ACCESS_KEY_ID --secret-key $AWS_SECRET_ACCESS_KEY --cluster test3;
 - ecs-cli compose -f docker-compose.prod.yml down;
 - ecs-cli compose -f docker-compose.prod.yml up;
 
