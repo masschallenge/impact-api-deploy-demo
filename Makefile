@@ -11,8 +11,7 @@ dev:
 	@docker-compose up
 
 test:
-	@docker-compose run --rm web \
-		python3 manage.py test --configuration=Test
+	@docker-compose run --rm web python3 manage.py test
 
 bash:
 	@docker-compose exec web /bin/bash
@@ -37,10 +36,6 @@ coverage:
 coverage-html: coverage
 	@docker-compose run --rm web coverage html
 	@open web/impact/htmlcov/index.html
-
-demo:
-	@docker-compose run --rm web ./manage.py make_demo_users
-	@docker-compose run --rm web ./manage.py make_demo_apps
 
 lint:
 	@docker-compose run --rm web pylint impact

@@ -1,11 +1,9 @@
-from django.conf.urls import url
+from django.conf.urls import include, url
 from django.contrib import admin
-from django.views.generic import TemplateView
 
-class Homepage(TemplateView):
-    template_name = 'home.html'
+from homepage import urls as homepage_urls
 
 urlpatterns = [
-    url(r'^$', Homepage.as_view(), name='homepage'),
     url(r'^admin/', admin.site.urls),
+    url(r'^', include(homepage_urls)),
 ]
